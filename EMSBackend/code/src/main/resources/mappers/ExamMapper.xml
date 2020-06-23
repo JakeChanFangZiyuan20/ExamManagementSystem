@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyj.ems.dao.ExamDao">
+
+    <resultMap id="examMap" type="com.cyj.ems.domain.Exam">
+        <id column="exam_id" property="examID"/>
+        <result column="exam_number" property="examNumber"/>
+        <result column="exam_name" property="examName"/>
+        <result column="exam_date" property="examDate"/>
+        <result column="exam_starttime" property="startTime"/>
+        <result column="exam_endtime" property="endTime"/>
+        <result column="exam_regprice" property="regPrice"/>
+    </resultMap>
+
+    <select id="getExamByExamID" resultMap="examMap">
+        select * from exams where exam_id = #{ examID }
+    </select>
+
+    <select id="getExamByExamNumber" resultMap="examMap">
+        select * from exams where exam_number = #{ examNumber }
+    </select>
+
+    <select id="getAllExam" resultMap="examMap">
+        select * from exams
+    </select>
+
+    <select id="getExamByExamName" resultMap="examMap">
+        select * from exams where exam_name like #{examName}
+    </select>
+
+    <select id="countExam" resultType="java.lang.Integer">
+        select count(*) from exams
+    </select>
+
+    <select id="getExamListByExamNumberList" resultMap="examMap">
+        select * from exams
+        where exam_number in
+        <foreach collection="examNumberList" item="examNumber" open="(" separator="," close=")">
+            #{ examNumber }
+        </foreach>
+    </select>
+
+    <select id="countExamSearchByExamName" resultType="java.lang.Integer">
+        select count(*) from exams where exam_name like #{ examName }
+    </select>
+
+    <insert id="insertExam" useGeneratedKeys="true" keyProperty="examID">
+        insert into exams (exam_number, exam_name, exam_date, exam_starttime, exam_endtime, exam_regprice)
+        values(#{ examNumber }, #{ examName }, #{ examDate }, #{ startTime }, #{ endTime }, #{ regPrice })
+    </insert>
+
+</mapper>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyj.ems.dao.ExamineeDao">
+
+    <resultMap id="examineeMap" type="com.cyj.ems.domain.Examinee">
+        <id column="examinee_id" property="examineeID"/>
+        <result column="examinee_number" property="examineeNumber"/>
+        <result column="user_name" property="userName"/>
+        <result column="exam_number" property="examNumber"/>
+        <result column="payment_status" property="paymentStatus"/>
+        <result column="clr_number" property="clrNumber" />
+        <result column="seat_number" property="seatNumber"/>
+    </resultMap>
+
+    <select id="getExamineeByExamineeID" resultMap="examineeMap">
+        select * from examinees where examinee_id = #{ examineeID }
+    </select>
+
+    <select id="getExamineeListByExamNumber" resultMap="examineeMap">
+        select * from examinees where exam_number = #{ examNumber }
+    </select>
+
+    <select id="countExamineeByExamNumber" resultType="java.lang.Integer">
+        select count(*) from examinees where exam_number = #{ examNumber }
+    </select>
+
+    <select id="getExamineeListByUserName" resultMap="examineeMap">
+        select * from examinees where user_name = #{ userName }
+    </select>
+
+    <select id="countExamineeByUserName" resultType="java.lang.Integer">
+        select count(*) from examinees where user_name = #{ userName }
+    </select>
+
+    <select id="getExamineeByExamineeNumber" resultMap="examineeMap">
+        select * from examinees where examinee_number = #{ examineeNumber }
+    </select>
+
+    <select id="countExamineeByExamNumberAndClrNumber" resultType="java.lang.Integer">
+        select count(*) from examinees where exam_number = #{ examNumber } and clr_number = #{ clrNumber }
+    </select>
+
+    <select id="getSeatListByExamNumberAndClrNumber" resultType="java.lang.Integer">
+        select seat_number from examinees where exam_number = #{ examNumber } and clr_number = #{ clrNumber }
+    </select>
+
+    <select id="getExamineeByUserNameAndExamNumber" resultMap="examineeMap">
+        select * from examinees where exam_number = #{ examNumber } and user_name = #{ userName }
+    </select>
+
+    <select id="getExamineeListByNoPay" resultMap="examineeMap">
+        select * from examinees where user_name = #{ userName } and payment_status = 0
+    </select>
+
+    <select id="countExamineeNonPay" resultType="java.lang.Integer">
+        select count(*) from examinees where user_name = #{ userName } and payment_status = 0
+    </select>
+
+    <insert id="insertExamineeList">
+        insert into examinees(examinee_number, user_name, exam_number, payment_status, clr_number, seat_number)
+        values
+        <foreach collection="examineeList" item="examinee" separator=",">
+            (#{ examinee.examineeNumber }, #{ examinee.userName }, #{ examinee.examNumber }, #{ examinee.paymentStatus }, #{ examinee.clrNumber }, #{ examinee.seatNumber })
+        </foreach>
+    </insert>
+
+    <insert id="insertSingleExaminee">
+        insert into examinees(examinee_number, user_name, exam_number, payment_status, clr_number, seat_number)
+        values (#{ examineeNumber }, #{ userName }, #{ examNumber }, #{ paymentStatus }, #{ clrNumber }, #{ seatNumber })
+    </insert>
+
+    <update id="updatePaymentStatus">
+        update examinees set payment_status = 1 where user_name = #{ userName } and exam_number = #{ examNumber }
+    </update>
+
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyj.ems.dao.ClrMgDao">
+
+    <resultMap id="clrMgMap" type="com.cyj.ems.domain.ClrMg">
+        <result column="clr_id" property="clrID"/>
+        <result column="mg_name" property="mgName" />
+        <result column="mg_phone"  property="mgPhone" />
+    </resultMap>
+
+    <select id="getClrMgByName" resultMap="clrMgMap">
+        select * from clr_mg where mg_name = #{ clrMgName }
+    </select>
+
+    <select id="getClrMgByClrID" resultMap="clrMgMap">
+        select * from clr_mg where clr_id = #{ clrID }
+    </select>
+
+    <select id="countClrMgByClrID" resultType="java.lang.Integer">
+        select count(*) from clr_mg where clr_id = #{ clrID }
+    </select>
+
+    <select id="hasClrMg" resultMap="clrMgMap">
+        select * from clr_mg
+        where clr_id = #{clrID} and mg_name = #{mgName} and mg_phone = #{mgPhone}
+    </select>
+
+    <insert id="insertClrMg">
+        insert into clr_mg(clr_id, mg_name, mg_phone) values(#{ clrID }, #{ mgName }, #{ mgPhone })
+    </insert>
+
+    <insert id="insertClrMgList">
+        insert into clr_mg(clr_id, mg_name, mg_phone)
+        values
+        <foreach collection="clrMgList" item="clrMg" separator=",">
+            ( #{ clrMg.clrID }, #{ clrMg.mgName }, #{ clrMg.mgPhone } )
+        </foreach>
+    </insert>
+
+    <delete id="deleteClrMg">
+        delete from clr_mg
+        where clr_id = #{clrID} and mg_name = #{mgName} and mg_phone = #{mgPhone}
+    </delete>
+
+    <update id="updateClrMg">
+        update clr_mg set mg_name = #{newMgName}, mg_phone = #{newMgPhone}
+        where clr_id = #{clrID} and mg_name = #{orgMgName} and mg_phone = #{orgMgPhone}
+    </update>
+
+</mapper>

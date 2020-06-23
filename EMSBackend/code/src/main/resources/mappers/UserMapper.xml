@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyj.ems.dao.UserDao">
+
+    <resultMap id="userMap" type="com.cyj.ems.domain.User">
+        <id column="user_id" property="userID"/>
+        <result column="user_name" property="userName"/>
+        <result column="user_password" property="password"/>
+        <result column="user_role" property="role"/>
+        <result column="user_trueName" property="trueName"/>
+        <result column="user_gender" property="gender"/>
+        <result column="user_birthday" property="birthday"/>
+        <result column="user_identity" property="identity"/>
+        <result column="user_phone" property="phone"/>
+        <result column="user_email" property="email"/>
+        <result column="user_photo" property="photoURL"/>
+    </resultMap>
+
+    <select id="getUserByUserName" resultMap="userMap">
+        select * from users where user_name = #{ userName }
+    </select>
+
+    <select id="getPwdByUserName" resultType="java.lang.String">
+        select user_password from users where user_name = #{ userName }
+    </select>
+
+    <select id="haveExistedList" resultType="java.lang.String" parameterType="java.lang.String">
+        select user_name from users
+        where user_name in
+        <foreach collection="userNameList" item="userName" separator="," open="(" close=")">
+            #{ userName }
+        </foreach>
+    </select>
+
+    <select id="getUserListByUserNameList" resultMap="userMap">
+        select * from users
+        where user_name in
+        <foreach collection="userNameList" item="userName" open="(" separator="," close=")">
+            #{ userName }
+        </foreach>
+    </select>
+
+    <update id="updatePhoto">
+        update users set user_photo = #{photoPath} where user_name = #{userName}
+    </update>
+
+    <update id="updatePwd">
+        update users set user_password = #{ newPwd } where user_name = #{ userName }
+    </update>
+
+    <update id="updateUserInfo">
+        update users
+        set user_truename = #{ trueName }, user_gender=#{ gender }, user_birthday = #{ birthday },
+            user_identity = #{ identity }, user_phone = #{ phone }, user_email = #{ email }
+        where user_name = #{ userName }
+    </update>
+
+    <insert id="insertSingleExamineeAccount" parameterType="com.cyj.ems.domain.User">
+        insert into users(user_name, user_password, user_role)
+        values(#{userName}, #{password}, #{role})
+    </insert>
+
+    <insert id="insertExamineeAccountList">
+        insert into users(user_name, user_password, user_role)
+        values
+        <foreach collection="examineeAccountList" item="examineeAccount" separator=",">
+            (#{examineeAccount.userName}, #{examineeAccount.password}, #{examineeAccount.role})
+        </foreach>
+    </insert>
+
+    <insert id="insertSingleUser">
+        insert into users(user_name, user_password, user_role, user_truename, user_gender, user_birthday, user_identity, user_phone, user_email, user_photo)
+        values (#{userName}, #{password}, #{role}, #{trueName}, #{gender}, #{birthday}, #{identity}, #{phone}, #{email}, #{photoURL})
+    </insert>
+</mapper>

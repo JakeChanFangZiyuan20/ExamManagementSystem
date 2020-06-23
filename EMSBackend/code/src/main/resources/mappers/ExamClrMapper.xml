@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyj.ems.dao.ExamClrDao">
+
+    <resultMap id="examClrMap" type="com.cyj.ems.domain.ExamClr">
+        <result column="exam_number" property="examNumber" />
+        <result column="clr_number" property="clrNumber" />
+    </resultMap>
+
+    <select id="getExamClrListByClrID" resultMap="examClrMap">
+        select * from exam_classroom where clr_number = #{ clrNumber }
+    </select>
+    
+    <select id="getExamClrListByExamNumber" resultMap="examClrMap">
+        select * from exam_clr where exam_number = #{ examNumber }
+    </select>
+
+    <select id="countExamClrByExamNumber" resultType="java.lang.Integer">
+        select count(*) from exam_clr where exam_number = #{ examNumber }
+    </select>
+
+    <insert id="insertExamClrList">
+        insert into exam_clr(exam_number, clr_number)
+        values
+        <foreach collection="examClrList" item="examClr" separator=",">
+            (#{ examClr.examNumber }, #{ examClr.clrNumber })
+        </foreach>
+    </insert>
+
+</mapper>

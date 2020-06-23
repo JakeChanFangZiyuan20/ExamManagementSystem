@@ -1,0 +1,97 @@
+server:
+  port: 8082
+
+
+spring:
+  # jdbc + mysql + druid
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # characterEncoding=utf-8 可解决插入中文到数据库为 '?' 问题
+    url: jdbc:mysql://47.75.133.246:3306/ems?serverTimezone=UTC&characterEncoding=utf-8
+    username: root
+    password: JakeChan20!
+    type: com.alibaba.druid.pool.DruidDataSource
+    # 其他配置
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMills: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    # 监控拦截 filter
+    filters: stat, wall, log4j2
+    maxPoolPreparedStatementPerConnectionSize: 20
+    userGlobalDataSourceStat: true
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+
+  # redis
+  redis:
+    host: 47.75.133.246
+    port: 6379
+    password: myredis
+    database: 0
+
+  # spring session
+  session:
+    store-type: redis
+    timeout: 1800 # 30 分钟
+    redis:
+      flush-mode: on_save
+
+  mvc:
+    static-path-pattern: /images/**
+  # 在 windows 下，图片存储在 file:E://_Java//IdeaProject//EMS//image
+  resources:
+    static-locations: file:E://_Java//IdeaProject//EMS//images
+
+mybatis:
+  mapper-locations: classpath:mappers/*Mapper.xml
+  type-aliases-package: com.cyj.ems.dao
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+
+#logging:
+#  level:
+#    com:
+#      cyj:
+#        ems:
+#          dao: debug
+
+# 以下是系统设计文件的位置，保证位置加 '\'
+localfilepath:
+  #FormatFile
+  formatfile:
+    addclr: E:\_Java\IdeaProject\EMS\FormatFile\AddClr\
+    addexam: E:\_Java\IdeaProject\EMS\FormatFile\AddExam\
+    addexaminee: E:\_Java\IdeaProject\EMS\FormatFile\AddExaminee\
+    export: E:\_Java\IdeaProject\EMS\FormatFile\Export\
+  #temp
+  temp:
+    addclr: E:\_Java\IdeaProject\EMS\temp\AddClr\
+    addexam:
+      addexam: E:\_Java\IdeaProject\EMS\temp\AddExam\
+      addexamclr: E:\_Java\IdeaProject\EMS\temp\AddExam\AddExamClr\
+      addexaminee: E:\_Java\IdeaProject\EMS\temp\AddExam\AddExaminee\
+      addexammg: E:\_Java\IdeaProject\EMS\temp\AddExam\AddExamMg\
+    addexaminee: E:\_Java\IdeaProject\EMS\temp\AddExaminee\
+    export:
+      viewclr: E:\_Java\IdeaProject\EMS\temp\Export\ViewClr\
+      viewexam:
+        examclr: E:\_Java\IdeaProject\EMS\temp\Export\ViewExam\ExamClr\
+        examexaminee: E:\_Java\IdeaProject\EMS\temp\Export\ViewExam\Examinee\
+        exammg: E:\_Java\IdeaProject\EMS\temp\Export\ViewExam\ExamMg\
+      viewexaminfo:
+        examinee: E:\_Java\IdeaProject\EMS\temp\Export\viewExamInfo\examinee\
+        mg: E:\_Java\IdeaProject\EMS\temp\Export\viewExamInfo\mg\
+  #images
+  images:
+    images: E:\_Java\IdeaProject\EMS\images\
+    temp: E:\_Java\IdeaProject\EMS\images\temp\
